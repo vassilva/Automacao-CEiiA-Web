@@ -1,0 +1,27 @@
+{
+  "name": "ceiia-web-bdd",
+  "version": "0.1.0",
+  "private": true,
+  "type": "commonjs",
+  "description": "BDD e2e tests for CEiiA website using Cypress + Cucumber",
+  "scripts": {
+    "test": "cypress run",
+    "cy:open": "cypress open"
+  },
+  "devDependencies": {
+    "@badeball/cypress-cucumber-preprocessor": "^18.0.6",
+    "@bahmutov/cypress-esbuild-preprocessor": "^2.2.7",
+    "cypress": "^13.17.0",
+    "esbuild": "^0.27.0"
+  },
+  "main": "cypress.config.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+  ,
+  "cypress-cucumber-preprocessor": {
+    "e2e": {
+      "stepDefinitions": "cypress/e2e/steps/*.{js,mjs,ts,tsx}"
+    }
+  }
+}
