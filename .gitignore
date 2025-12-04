@@ -31,6 +31,6 @@ Thumbs.db
 # Coverage reports
 coverage/
 
-# Cache
+# Cache - Cache
 .cache/
 
