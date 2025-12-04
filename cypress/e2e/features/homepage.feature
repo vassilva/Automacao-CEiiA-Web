@@ -1,3 +1,4 @@
+
 Feature: Validar homepage do site CEiiA
   Como visitante do site
   Quero visualizar corretamente a homepage
