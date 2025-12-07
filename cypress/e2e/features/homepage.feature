@@ -17,3 +17,4 @@ Feature: Validar homepage do site CEiiA
     Then não devo sair da homepage
     And o URL deve continuar sendo o da página inicial
     And o conteúdo principal deve permanecer visível
+    And fecho as Configurações de cookies
