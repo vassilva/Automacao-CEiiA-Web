@@ -47,3 +47,7 @@ Then("o URL deve continuar sendo o da página inicial", () => {
 Then("o conteúdo principal deve permanecer visível", () => {
   homepage.assertHeroBannerVisible();
 });
+
+Then("fecho as Configurações de cookies", () => {
+  cy.dismissCookies();
+});
