@@ -13,6 +13,10 @@ Then("o logotipo {string} deve estar visível no canto superior esquerdo", () =>
   homepage.assertLogoTopLeft();
 });
 
+Then("o logotipo {string} deve estar visível no canto superior esquerdo na cor branca", () => {
+  homepage.assertLogoTopLeftWhite();
+});
+
 
 
 Then("o menu lateral deve estar visível no canto superior direito", () => {
