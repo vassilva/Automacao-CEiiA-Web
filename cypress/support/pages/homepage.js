@@ -1,4 +1,4 @@
-import { expectWithMsg, assertNoErrorTexts } from "../assertions";
+import { expectWithMsg, assertNoErrorTexts, isWhiteColor } from "../assertions";
 
 export class HomePage {
   visit() {
@@ -35,6 +35,47 @@ export class HomePage {
           cy.wait(1500);
           cy.screenshot("logo-click-evidence", { capture: "viewport" });
         }
+      });
+  }
+
+  assertLogoTopLeftWhite() {
+    cy.get(
+      'img[alt="CEiiA"], [aria-label^="CEiiA"], a[href="/"] img, a[href="/"] svg'
+    , { timeout: 10000 })
+      .first()
+      .then(($el) => {
+        expectWithMsg($el, "CEiiA logo should be visible").to.be.visible;
+        const rect = $el[0].getBoundingClientRect();
+        expectWithMsg(rect.top, "Logo should be at top area").to.be.lessThan(160);
+        expectWithMsg(rect.left, "Logo should be near left side").to.be.lessThan(120);
+
+        const node = $el[0];
+        const svg = node.tagName.toLowerCase() === "svg" ? node : node.closest("svg");
+        if (svg) {
+          const win = svg.ownerDocument.defaultView;
+          const shapes = svg.querySelectorAll("path, rect, circle, polygon, text");
+          let ok = false;
+          shapes.forEach((sh) => {
+            if (ok) return;
+            const cs = win.getComputedStyle(sh);
+            const fill = (cs.fill || "").trim();
+            const stroke = (cs.stroke || "").trim();
+            if (isWhiteColor(fill) || isWhiteColor(stroke)) ok = true;
+          });
+          expectWithMsg(ok, "Logo should be white").to.be.true;
+        } else {
+          const win = node.ownerDocument.defaultView;
+          const cs = win.getComputedStyle(node);
+          const color = (cs.color || "").trim();
+          const bg = (cs.backgroundColor || "").trim();
+          const ok = isWhiteColor(color) || isWhiteColor(bg);
+          expectWithMsg(ok, "Logo should be white").to.be.true;
+        }
+
+        cy.wrap($el)
+          .scrollIntoView()
+          .invoke("css", "outline", "3px solid #00c6ff")
+          .screenshot("logo-top-left-white", { capture: "viewport" });
       });
   }
 
@@ -130,6 +171,47 @@ export class HomePage {
         !text.includes("stack trace") && !text.includes("uncaught"),
         "No exception messages should appear"
       ).to.be.true;
+    });
+  }
+
+  assertButtonColor(label, colorName) {
+    const name = String(colorName || "").toLowerCase();
+
+    cy.get("body", { timeout: 12000 }).then(($b) => {
+      const target = $b
+        .find('button, [role="button"], a, .btn, [class*="button" i]')
+        .filter(function () {
+          const txt = (this.textContent || "").toLowerCase();
+          const aria = (this.getAttribute("aria-label") || "").toLowerCase();
+          const lbl = String(label || "").toLowerCase();
+          return txt.includes(lbl) || aria.includes(lbl);
+        })
+        .filter(":visible")
+        .first();
+
+      expectWithMsg(target, `Botão "${label}" deve estar visível`).to.exist;
+
+      cy.wrap(target).then(($el) => {
+        const win = $el[0].ownerDocument.defaultView;
+        const styles = win.getComputedStyle($el[0]);
+        const color = styles.color || "";
+        const bg = styles.backgroundColor || "";
+
+        let expectedOk = false;
+        if (name === "branca") {
+          expectedOk = isWhiteColor(color) || isWhiteColor(bg);
+        }
+
+        expectWithMsg(
+          expectedOk,
+          `Botão "${label}" deve ter cor ${colorName}`
+        ).to.be.true;
+
+        cy.wrap($el)
+          .scrollIntoView()
+          .invoke("css", "outline", "2px solid #00c6ff")
+          .screenshot(`btn-color-${label}-${name}`, { capture: "viewport" });
+      });
     });
   }
 }

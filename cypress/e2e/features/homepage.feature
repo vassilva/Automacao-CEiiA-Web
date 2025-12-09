@@ -6,7 +6,7 @@ Feature: Validar homepage do site CEiiA
   Scenario: Carregamento da homepage com sucesso
     Given que acesso a URL principal do CEiiA
     When a homepage for carregada
-    Then o logotipo "CEiiA" deve estar visível no canto superior esquerdo
+    Then o logotipo "CEiiA" deve estar visível no canto superior esquerdo na cor branca
     And o menu lateral deve estar visível no canto superior direito
     And o banner principal deve ser exibido corretamente
     And nenhuma mensagem de erro deve aparecer na página
